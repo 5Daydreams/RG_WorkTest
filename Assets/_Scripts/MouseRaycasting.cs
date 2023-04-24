@@ -5,11 +5,33 @@ namespace _Scripts
 {
     public class MouseRaycasting : MonoBehaviour
     {
+        [SerializeField] private bool _debug;
         private bool _wasClickingBefore = false;
-        
+        private Camera _camera;
+
+        private void Awake()
+        {
+            _camera = Camera.main;
+        }
+
         private void Update()
         {
             bool isClickingNow = Input.GetMouseButton(0);
+
+            if (isClickingNow && _debug)
+            {
+                Vector3 screenPos = Input.mousePosition;
+                
+                Ray ray = Camera.main.ScreenPointToRay(screenPos);
+                RaycastHit hit;
+                
+                if (Physics.Raycast(ray, out hit))
+                {
+                    Debug.Log("Hit point: " + hit.point);
+                    
+                    // lerp the old position of the highlight to this position  
+                }
+            }
             
             HandleClicking(isClickingNow);
 
