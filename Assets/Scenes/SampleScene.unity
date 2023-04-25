@@ -827,7 +827,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 600174574160714231, guid: 28e61897469670e41b9001c381366be5, type: 3}
       propertyPath: m_InitialEventNameOverriden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 600174574160714231, guid: 28e61897469670e41b9001c381366be5, type: 3}
       propertyPath: m_PropertySheet.m_Float.m_Array.Array.data[0].m_Value
@@ -887,7 +887,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5129505471854962457, guid: 28e61897469670e41b9001c381366be5, type: 3}
       propertyPath: m_InitialEventNameOverriden
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7964657900402088817, guid: 28e61897469670e41b9001c381366be5, type: 3}
       propertyPath: UnityEventResponse.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
