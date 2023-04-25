@@ -2,15 +2,16 @@ using System;
 using _Scripts.CustomEvents.BoolEvent;
 using _Scripts.CustomEvents.VoidEvents;
 using UnityEngine;
+using UnityEngine.Events;
 
 namespace _Scripts
 {
-    public class MouseRaycasting : MonoBehaviour
+    public class MouseTargetting : MonoBehaviour
     {
         [SerializeField] private bool _debug;
         [SerializeField] private Transform _effectTransform;
         [SerializeField] private float _lerpSpeed;
-        [SerializeField] private BoolEvent _effectToggleEvent;
+        [SerializeField] private UnityEvent<bool> _effectToggleEvent;
 
         private Vector3 _cursorWorldPos;
         private bool _wasClickingBefore = false;
@@ -38,7 +39,7 @@ namespace _Scripts
                     {
                         Debug.Log("Hit point: " + hit.point);
                     }
-                    
+
                     _cursorWorldPos = hit.point;
                     // lerp the old position of the highlight to this position (done later)  
                 }
@@ -73,17 +74,18 @@ namespace _Scripts
                     break;
             }
 
-            LerpToCursorPos(_effectTransform);
+            LerpToCursorPos(_effectTransform, _lerpSpeed * Time.deltaTime);
         }
 
-        private void LerpToCursorPos(Transform target)
+        private void LerpToCursorPos(Transform target, float lerpT)
         {
-            target.position = Vector3.Lerp(target.position, _cursorWorldPos, _lerpSpeed * Time.deltaTime);
+            target.position = Vector3.Lerp(target.position, _cursorWorldPos, lerpT);
         }
 
         private void StartedClick()
         {
-            _effectToggleEvent.Raise(true);
+            _effectTransform.position = _cursorWorldPos;
+            _effectToggleEvent.Invoke(true);
             // Start the VFX
         }
 
@@ -94,7 +96,7 @@ namespace _Scripts
 
         private void EndedClick()
         {
-            _effectToggleEvent.Raise(false);
+            _effectToggleEvent.Invoke(false);
             // End the VFX
         }
     }
