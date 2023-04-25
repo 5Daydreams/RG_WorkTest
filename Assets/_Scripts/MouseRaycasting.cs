@@ -1,4 +1,6 @@
 using System;
+using _Scripts.CustomEvents.BoolEvent;
+using _Scripts.CustomEvents.VoidEvents;
 using UnityEngine;
 
 namespace _Scripts
@@ -6,6 +8,11 @@ namespace _Scripts
     public class MouseRaycasting : MonoBehaviour
     {
         [SerializeField] private bool _debug;
+        [SerializeField] private Transform _effectTransform;
+        [SerializeField] private float _lerpSpeed;
+        [SerializeField] private BoolEvent _effectToggleEvent;
+
+        private Vector3 _cursorWorldPos;
         private bool _wasClickingBefore = false;
         private Camera _camera;
 
@@ -18,21 +25,25 @@ namespace _Scripts
         {
             bool isClickingNow = Input.GetMouseButton(0);
 
-            if (isClickingNow && _debug)
+            if (isClickingNow)
             {
                 Vector3 screenPos = Input.mousePosition;
-                
-                Ray ray = Camera.main.ScreenPointToRay(screenPos);
+
+                Ray ray = _camera.ScreenPointToRay(screenPos);
                 RaycastHit hit;
-                
+
                 if (Physics.Raycast(ray, out hit))
                 {
-                    Debug.Log("Hit point: " + hit.point);
+                    if (_debug)
+                    {
+                        Debug.Log("Hit point: " + hit.point);
+                    }
                     
-                    // lerp the old position of the highlight to this position  
+                    _cursorWorldPos = hit.point;
+                    // lerp the old position of the highlight to this position (done later)  
                 }
             }
-            
+
             HandleClicking(isClickingNow);
 
             // Previous state becomes current state
@@ -49,11 +60,11 @@ namespace _Scripts
 
                 case (true, false):
                     StartedClick();
-                    return;
+                    break;
 
                 case (true, true):
                     HeldClick();
-                    return;
+                    break;
 
                 case (false, true):
                     EndedClick();
@@ -61,10 +72,18 @@ namespace _Scripts
                 default:
                     break;
             }
+
+            LerpToCursorPos(_effectTransform);
+        }
+
+        private void LerpToCursorPos(Transform target)
+        {
+            target.position = Vector3.Lerp(target.position, _cursorWorldPos, _lerpSpeed * Time.deltaTime);
         }
 
         private void StartedClick()
         {
+            _effectToggleEvent.Raise(true);
             // Start the VFX
         }
 
@@ -75,6 +94,7 @@ namespace _Scripts
 
         private void EndedClick()
         {
+            _effectToggleEvent.Raise(false);
             // End the VFX
         }
     }
