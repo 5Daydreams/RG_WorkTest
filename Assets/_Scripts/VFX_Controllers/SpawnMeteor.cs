@@ -7,58 +7,46 @@ namespace _Scripts.VFX_Controllers
 {
     public class SpawnMeteor : MonoBehaviour
     {
-        [SerializeField] private VisualEffect _meteorPrefab;
+        [SerializeField] private Meteor _meteorPrefab;
         [SerializeField] private VisualEffect _portalPrefab;
         [SerializeField] private Transform _spawnOrigin;
-        [SerializeField] private AnimationCurve _motionCurve;
-        [SerializeField] private float _animDuration;
         [SerializeField] private float _cooldown;
 
-        private Transform _meteorInstance;
-        private Vector3 _targetPos;
+        private VisualEffect _portalInstance;
 
         private float _cooldownTimer = 0.0f;
 
-        private float _animationTimer = 0.0f;
+        private bool isOnCooldown => _cooldownTimer > 0.0f;
 
         public void RequestCast(Vector3 targetPos)
         {
-            if (_cooldownTimer > 0.0f)
+            if (isOnCooldown)
             {
                 return;
             }
 
-            _targetPos = targetPos;
-            Cast();
+            Cast(targetPos);
         }
 
-        private void Cast()
+        private void Cast(Vector3 targetPos)
         {
             _cooldownTimer = _cooldown;
-            _animationTimer = 0.0f;
 
-            _meteorInstance = Instantiate(_meteorPrefab, _spawnOrigin.position, Quaternion.identity).transform;
+            Meteor meteorInstance = Instantiate(_meteorPrefab, _spawnOrigin.position, Quaternion.identity);
+            meteorInstance.SetupMeteor(_spawnOrigin.position, targetPos);
+            
+            // VisualEffect portal = Instantiate(_portalPrefab, _spawnOrigin.position, Quaternion.identity);
+            // portal.Play();
         }
 
         private void Update()
         {
-            if (_animationTimer > _animDuration)
+            if (!isOnCooldown)
             {
                 return;
             }
 
-            if (_cooldownTimer >= 0.0f)
-            {
-                _cooldownTimer -= Time.deltaTime;
-            }
-
-            _animationTimer += Time.deltaTime;
-
-            float normalizedAnimTime = _animationTimer / _animDuration;
-
-            float lerpT = _motionCurve.Evaluate(normalizedAnimTime);
-
-            _meteorInstance.position = Vector3.Lerp(_spawnOrigin.position, _targetPos, lerpT);
+            _cooldownTimer -= Time.deltaTime;
         }
     }
 }

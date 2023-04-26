@@ -6,12 +6,14 @@ using UnityEngine.Events;
 
 namespace _Scripts
 {
-    public class MouseTargetting : MonoBehaviour
+    public class MouseCastController : MonoBehaviour
     {
         [SerializeField] private bool _debug;
-        [SerializeField] private Transform _effectTransform;
+        [SerializeField] private Transform _targetEffectTransform;
         [SerializeField] private float _lerpSpeed;
+        
         [SerializeField] private UnityEvent<bool> _effectToggleEvent;
+        [SerializeField] private UnityEvent<Vector3> _endClickEvent;
 
         private Vector3 _cursorWorldPos;
         private bool _wasClickingBefore = false;
@@ -55,26 +57,24 @@ namespace _Scripts
         {
             switch (isClickingNow, _wasClickingBefore)
             {
-                case (false, false):
-                    // Exit if no clicks had been recorded previously
-                    return;
-
                 case (true, false):
                     StartedClick();
                     break;
 
                 case (true, true):
-                    HeldClick();
+                    // HeldClick();
                     break;
 
                 case (false, true):
                     EndedClick();
                     return;
-                default:
-                    break;
+
+                case (false, false):
+                    // NoClick();
+                    return;
             }
 
-            LerpToCursorPos(_effectTransform, _lerpSpeed * Time.deltaTime);
+            LerpToCursorPos(_targetEffectTransform, _lerpSpeed * Time.deltaTime);
         }
 
         private void LerpToCursorPos(Transform target, float lerpT)
@@ -84,20 +84,30 @@ namespace _Scripts
 
         private void StartedClick()
         {
-            _effectTransform.position = _cursorWorldPos;
+            _targetEffectTransform.position = _cursorWorldPos;
             _effectToggleEvent.Invoke(true);
-            // Start the VFX
+            // Start the channeling VFX
         }
 
         private void HeldClick()
         {
             // Perhaps this is a do nothing?
+            // I am thinking if there is a behavior which might be required to loop while the cast is held.
+            // Not able to think of anything just yet
         }
 
         private void EndedClick()
         {
             _effectToggleEvent.Invoke(false);
-            // End the VFX
+            _endClickEvent.Invoke(_cursorWorldPos);
+            // End the player's casting and the targeting VFX 
+        }
+
+        private void NoClick()
+        {
+            // Perhaps this is a do nothing?
+            // I am thinking if there is a behavior which might be required to loop while the cast is not held.
+            // Not able to think of anything just yet
         }
     }
 }
