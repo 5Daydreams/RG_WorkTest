@@ -499,10 +499,10 @@
     "m_Guid": {
         "m_GuidSerialized": "72e9c680-edc9-4934-8836-9990ec8b6496"
     },
-    "m_Name": "FadeMultiplier",
+    "m_Name": "Fade_Scaling",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "FadeMultiplier",
-    "m_DefaultReferenceName": "_FadeMultiplier",
+    "m_RefNameGeneratedByDisplayName": "Fade_Scaling",
+    "m_DefaultReferenceName": "_Fade_Scaling",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": true,
     "m_UseCustomSlotLabel": false,
@@ -524,7 +524,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "75ea4987241a47a9a896913865c36345",
     "m_Id": 0,
-    "m_DisplayName": "FadeMultiplier",
+    "m_DisplayName": "Fade_Scaling",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
