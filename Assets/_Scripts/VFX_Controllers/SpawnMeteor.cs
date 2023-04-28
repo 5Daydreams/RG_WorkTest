@@ -8,7 +8,6 @@ namespace _Scripts.VFX_Controllers
     public class SpawnMeteor : MonoBehaviour
     {
         [SerializeField] private Meteor _meteorPrefab;
-        [SerializeField] private VisualEffect _portalPrefab;
         [SerializeField] private Transform _spawnOrigin;
         [SerializeField] private float _cooldown;
 
@@ -34,9 +33,14 @@ namespace _Scripts.VFX_Controllers
 
             Meteor meteorInstance = Instantiate(_meteorPrefab, _spawnOrigin.position, Quaternion.identity);
             meteorInstance.SetupMeteor(_spawnOrigin.position, targetPos);
-            
-            // VisualEffect portal = Instantiate(_portalPrefab, _spawnOrigin.position, Quaternion.identity);
-            // portal.Play();
+
+            bool selfDestructEnabled = meteorInstance.GetComponent<SelfDestructTimer>();
+
+            if (!selfDestructEnabled)
+            {
+                SelfDestructTimer thing = meteorInstance.AddComponent<SelfDestructTimer>();
+                thing.KillOnTimer(_cooldown * 2.0f);
+            }
         }
 
         private void Update()

@@ -31,8 +31,10 @@ namespace _Scripts.VFX_Controllers
             else
             {
                 _vfx.Stop();
+                _vfx.SendEvent("Stop");
             }
         }
                                                 
     }
 }
+
